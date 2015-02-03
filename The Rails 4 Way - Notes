@@ -53,7 +53,7 @@ The Rails 4 Way - Notes
   Time Zones(application.rb)
     you can set the time zone an locale:
       config.time_zone = 'Central Time (US & Canada)'
-      run rake time:zones:all for a list of zones
+      run 'rake time:zones:all' at cl for a list of zones
 
   Localization
     set up the locale which effects language here
@@ -78,9 +78,32 @@ The Rails 4 Way - Notes
       Use the console to figure out how infletor reacts to a word
       $ rails console
       >> ActiveSupport::Inflector.pluralize "virus"
-      => "viri"
+      => "viri" # wierdly enough this default is incorrect
       >> "pensum".pluralize
       => "pensums"
+      configure new pluralizations in  config/initializers/inflections.rb
+
+    Custom MIME Types
+      add types to mime_types.rb
+      for example by default .txt is supported but .rft is not
+
+    Session Store
+      session_- store.rb - thats where you can config cookie/session
+      run rake secret to generate a new secret key
+
+    Wrap Parameters
+      sets it up so javascrip MVC frameworks like backbone, ember or angular play nice with rails
+      when the json goes through a controller it "wraps" it
+      or sets it up so that it looks like it came to the controller from a form_for helper
+
+  Additional Configuration
+
+    Load Path Modifications
+      you can make your app load files from directories other than the default
+
+    Log-Level Override
+      configure how much information the log file will giveo you in the various enviroments
+      available log levels are: :debug, :info, :warn, :error, :fatal, and :unknown these also correspond with the numbers 0 to 5
 
 
 
