@@ -1,0 +1,88 @@
+The Rails 4 Way - Notes
+
+1 - Rails enviroment and configuration
+
+  this chapter will cover:
+    bundler
+    boot.rb and application.rb(startup and request handeling)
+    the three enviroments that come standard(development, production, test)
+    creating your oen enviroment
+  thats it!
+
+  Bundler
+    Gets Gems, handels dependencies, rseloves complex dependencies for you
+
+  Gemfile
+    specifies dependencies, if there is no version it just gets the latest version from rubygems.
+
+    pseudocode -- gem '(gem_name)', '(version_#)'
+    pseudocode -- group :(enviroment_name) do
+                    gem '(gem_name)'
+                  end
+
+  Load Gems from git
+    pseudocode -- gem '(gem_name)', git:'(git_repo_address)'
+
+  Load Gems from your Local Machine
+    pseudocode -- gem '(gem_name)', path:'~/(local_directory_with_gem)'
+
+  Packaging Gems
+
+    Why would you package?  to avoid external dependencies(if you don't want to rely on rubygems or an online gem repo)
+    to package:
+      bundle package
+      bundle install --local
+
+  Startup & App Settings
+
+    config/boot.rb
+      sets up bundler and loads paths
+    config/application.rb
+      rails gems for ENV, configures
+    config/enviroment.rb
+      runs initializers
+
+  config/application.rb
+    Rails app settings
+    changes to this file require a server restart to take effect
+    by default the file has:
+      require "rails/all"
+    but you can delete that if you only want to enable certain parts of the rails default configuations(railties), for example:
+      require "active_record/railtie"
+
+  Time Zones(application.rb)
+    you can set the time zone an locale:
+      config.time_zone = 'Central Time (US & Canada)'
+      run rake time:zones:all for a list of zones
+
+  Localization
+    set up the locale which effects language here
+
+  Generator Default Settings
+    here you can set up what you get when you run 'rails g ...' commands
+    some gems do this for you
+
+  Initializers(config/initializers)
+
+    Backtrace Silencers (smaller errors)
+      you can specifiy how far back you want the backtrace to go when an error message with a long backtrace is thrown
+
+    Filter Parameter Logging (private parts of logs)
+      you can keep certain parameters out of your logs so if hackers find your logs they can't abuse this information.
+      for example: you might want to filter credit card info
+      Rails.application.config.filter_parameters += [:credit_card_number]
+
+!!  Inflections
+      a class named inflector transforms strings from singular to plural
+      class names to table names ect.
+      Use the console to figure out how infletor reacts to a word
+      $ rails console
+      >> ActiveSupport::Inflector.pluralize "virus"
+      => "viri"
+      >> "pensum".pluralize
+      => "pensums"
+
+
+
+
+
