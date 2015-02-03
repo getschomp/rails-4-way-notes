@@ -105,7 +105,55 @@ The Rails 4 Way - Notes
       configure how much information the log file will giveo you in the various enviroments
       available log levels are: :debug, :info, :warn, :error, :fatal, and :unknown these also correspond with the numbers 0 to 5
 
+    Schema Dumper
+       "revert to the older style of dumping the schema using SQL, if you’re doing things that are incompatible with the schema dumper code"
 
+    Console
+     you can configure what methods are run in the console when you run rails c
+     for instance you can configure the console to use pry instead of irb
 
+    Spring
+      speeds dev by "eliminating the need to boot up Rails every time you execute tests, or run a rake task."
 
+  Development Mode
+
+    Automatic Class Reloading
+      config.cache_classes = false # this makes sure rails gets all code changes each time you reload in development
+
+    The Rails Class Loader
+      in rails the name of files tells what class module is within them
+      rails has a load path
+      run $LOAD_PATH in the console to see the load path
+
+    Rails, Modules, and Auto-Loading Code
+      Rails is able to automatically require the right files based on file names
+      if you follow rails naming conventions there is typically no need to require anything
+
+    Eager Load
+      config.eager_load = false # boosts loading speed in dev
+
+    Error Reports
+      config.consider_all_requests_local = true # gives developer freindly error messages in the browser even when on a remote machine
+
+    Caching
+      caching = bad in development
+      unless you are testing caching
+      if you are testing caching change this line as so:
+      config.action_controller.perform_caching = true
+
+    Raise Delivery Errors
+      # Don't care if the mailer can't send.
+      config.action_mailer.raise_delivery_errors = false
+      change that line if you are debugging or teting mailing in production
+      you can see the delivery in the log
+
+    Deprecation Notices
+      set how you recive depreciation notices
+      throught the rails logger
+
+    Pending Migrations Error Page
+      gives you an error in the browser if you didn't migrate
+      as it sounds, by default on page load
+
+    Assets Debug Mode
 
