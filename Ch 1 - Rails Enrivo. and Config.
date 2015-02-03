@@ -10,7 +10,7 @@ The Rails 4 Way - Notes
   thats it!
 
   Bundler
-    Gets Gems, handels dependencies, rseloves complex dependencies for you
+    Gets Gems, handels dependencies, resolves complex dependencies for you
 
   Gemfile
     specifies dependencies, if there is no version it just gets the latest version from rubygems.
@@ -51,12 +51,13 @@ The Rails 4 Way - Notes
       require "active_record/railtie"
 
   Time Zones(application.rb)
-    you can set the time zone an locale:
+    you can set the time zone:
       config.time_zone = 'Central Time (US & Canada)'
+      config.time_zone = 'Eastern Time (US & Canada)'
       run 'rake time:zones:all' at cl for a list of zones
 
   Localization
-    set up the locale which effects language here
+    set up the locale to change the language
 
   Generator Default Settings
     here you can set up what you get when you run 'rails g ...' commands
@@ -64,7 +65,7 @@ The Rails 4 Way - Notes
 
   Initializers(config/initializers)
 
-    Backtrace Silencers (smaller errors)
+    Backtrace Silencers (smaller error messages)
       you can specifiy how far back you want the backtrace to go when an error message with a long backtrace is thrown
 
     Filter Parameter Logging (private parts of logs)
@@ -102,7 +103,7 @@ The Rails 4 Way - Notes
       you can make your app load files from directories other than the default
 
     Log-Level Override
-      configure how much information the log file will giveo you in the various enviroments
+      configure how much information the log file will give you in the various enviroments
       available log levels are: :debug, :info, :warn, :error, :fatal, and :unknown these also correspond with the numbers 0 to 5
 
     Schema Dumper
@@ -156,4 +157,89 @@ The Rails 4 Way - Notes
       as it sounds, by default on page load
 
     Assets Debug Mode
+     # Debug mode disables concatenation and preprocessing of assets.
+      config.assets.debug = true
+
+  Test Mode
+    default setup
+      RAILS_ENV = test
+      eager load false
+      disable caching
+      the test enviroment sends emails to an array called ActionMailer::Base.deliveries
+      mostly you will never need to edit the test config
+
+  Custom Enviroments
+    might be configured for a QA deployment to diagnose production problems
+
+  Production Mode
+
+    General
+      faster because it does reload everything at ever request
+      #File:config/environments/production.rb
+      cache = true
+      eager_load = true #proformance boost in production
+      compress assets
+
+    Assets
+      assets are by default precompiled by the Asset Pipeline
+      To enable live asset compilation fallback on production, set config.assets.compile to true.
+
+  Configuring a Database
+    don't store database.yml on github
+    or use an enviroment variable like DATABASE_URL
+
+  Configuring Application Secrets
+    use an enviroment variable like ENV['SECRET_KEY_BASE']
+
+  Logging
+    a message to the log using the logger
+
+    Rails Log Files
+      rails logs can become huge
+      clear the logs using 'rake log:clear'
+      it can be useful to have a terminal window open and tracking the log at all times during development.
+      to do that run:
+      tail -f log/development.log
+      most useful log outputs :
+      the hash of parmeters associated with the request
+      controllers and actions invoced as well as SQL statements
+      how fast the processes completed
+
+    Tagged Logging
+      prepend a tag to a log file with information making it easier to track down what you are looking for
+      config.log_tags to [:subdomain]
+      the log might then say [some_subdomain] Started GET "/articles" for 127.0.0.1 at 2013-02-01 11:49:09 -0500
+
+    Log File Analysis
+      proformance
+        not always that accurate but still pretty useful for comparison sake
+      SQL queries
+        is active record doing what i want?
+        am i calling an N+1 select over and over
+        A lot of times all it takes is proper use of the includes method on a particular query to alleviate the problem.
+
+          this code:
+            clients = Client.limit(10)
+
+            clients.each do |client|
+              puts client.address.postcode
+            end
+
+          could be:
+            clients = Client.includes(:address).limit(10)
+
+            clients.each do |client|
+              puts client.address.postcode
+            end
+
+         The controller should call the data from the model and pass into the view
+         never call active record database methods directly from the view?
+         "There are cases (such as usage of fragment caching) where it makes sense to have database operations happening during view rendering."
+
+      Rails::Subscriber.colorize_logging
+        tell rails weather or not to color the log outputs
+
+
+
+
 
