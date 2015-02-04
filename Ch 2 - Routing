@@ -1,0 +1,32 @@
+The Rails 4 Way - Notes
+
+2 - Routing
+
+  Intro
+    Routing determines which conttoller and action to execute
+    Routing maps urls to actions
+    add ruby code to config/routes.rb to configure the routes
+    'rails g' will add code to the router but you can also make custom routes
+
+  The Two Purposes of Routing
+    generates urls
+    maps requests to the contoller
+    HTTP_verb '(static_string)/(segment_key)' => "(controller_action mapping)"
+    example: get 'recipes/:ingredient' => "recipes#index"
+
+  The routes.rb File
+    it defines routes!
+    it has to go through all of the routes in the order they to recognize a pattern match for the resource rails is looking for
+    (maybe good practice to put the most used resources first?)
+
+  Regular Routes
+    most basic supplies url pattern, controller/class action and HTTP method
+    get 'products/:id' => 'products#show'
+
+  Contraining request Methods
+    limit the HTTP methods that can be used to acess a route
+    ```get 'products/:id' => 'products#show'
+        post 'products' => 'products#create'```
+
+    is equivilent to:
+      ```match 'products/:id' => 'products#show', via: [:get, :post]```
