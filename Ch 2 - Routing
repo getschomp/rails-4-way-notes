@@ -25,8 +25,21 @@ The Rails 4 Way - Notes
 
   Contraining request Methods
     limit the HTTP methods that can be used to acess a route
+    This:
     ```get 'products/:id' => 'products#show'
         post 'products' => 'products#create'```
-
     is equivilent to:
       ```match 'products/:id' => 'products#show', via: [:get, :post]```
+    or declare all the HTTP verbs as fair game:
+      ```match 'products' => 'products#index', via: :any```
+
+  URL Patterns
+    route: get ":id" => "products#show"
+    url: http://localhost:3000/8
+    match" 'products/:id' => 'products#show'
+
+  Segment keys
+  in 'get 'products/:id' => 'products#show''
+  :id is a segment key
+
+
