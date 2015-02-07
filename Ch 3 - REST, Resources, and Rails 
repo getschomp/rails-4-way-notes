@@ -20,7 +20,41 @@ The Rails 4 Way - Notes
       The story of REST and Rails starts with CRUD...
 
     Routing and CRUD
-      actions are mostly the same at there base create Read Update and delete no need to name them creativly each time with things like add_item or replace_email_address
+      actions are mostly the same - Create Read Update and delete no need to name them creativly each time with things like add_item or replace_email_address
       You can create a route that maps to any action, whatever the action’s name. Choosing CRUD names is a matter of discipline. Except... when you use the REST facilities offered by Rails, it happens automatically.
       Using REST gives you shortcuts to best practices
+
+      Rest Resources and CRUD
+        the more you "play along" with the rails way of designing an REST interface the easier your life will be
+        Rails version of REST tends to associated resources with a model/veiw/controller stack
+        people use the terminology loosely saying they've created a book resource meaning routes views and controllers because they tend to be associated in the rails way
+
+      From Named Routes to REST support
+        we want the simplicity of calling auctions_path for both create and index,
+        but these would be pointing to the same url, so how do we differentiate them
+
+      Reenter the HTTP verb
+        a form submisson does goto the auctions_path but it
+        attaches an HTTP POST verb
+        if a request goes to the index page without going through a form it knows to attach a GET
+        Routes can have the same name but do diffrent things depending on their verb
+        this is how one resource call can get us 7 purmutations with 4 named routes.
+        we are able to almost double the number of purmutations created by the routes by attaching HTTP verbs
+
+      The Standard RESTful Controller Actions
+        when you call
+        resources :auctions
+        you make a bargin with rails to use certain controller action names
+        index, create, show, update, destroy, new, edit
+        you need to know what contexts will throw an HTTP verb since you are using the same routes for both
+        1. The default request method is GET.
+        2. In a form_tag or form_for call,the POST method will be used automatically.(Thats why my refresh button was attaching an unwanted post method)
+        3. Sometimes you might want to specify the method yourself along with a url(mostly with PATCH and DELETE operations)
+        example
+        ```link_to "Delete", auction_path(auction), method: :delete```
+
+
+
+
+
 
