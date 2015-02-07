@@ -16,7 +16,7 @@ The Rails 4 Way - Notes
 
   The routes.rb File
     it defines routes!
-    it has to go through all of the routes in the order they to recognize a pattern match for the resource rails is looking for
+    it has to go through all of the routes in the order they to recognize a pattern match for the resource it is looking for
     (maybe good practice to put the most used resources first?)
 
   Regular Routes
@@ -24,7 +24,7 @@ The Rails 4 Way - Notes
     get 'products/:id' => 'products#show'
 
   Contraining request Methods
-    limit the HTTP methods that can be used to acess a route
+    limit the HTTP methods that can be used to access a route
     This:
     ```get 'products/:id' => 'products#show'
         post 'products' => 'products#create'```
@@ -39,7 +39,105 @@ The Rails 4 Way - Notes
     match" 'products/:id' => 'products#show'
 
   Segment keys
-  in 'get 'products/:id' => 'products#show''
-  :id is a segment key
+    in 'get 'products/:id' => 'products#show''
+    :id is a segment key
+    this maps to the show page for that segment key
+    the original way to link in a view
+     link_to "Products",
+        controller: "products",
+        action: "show",
+         id: 1
+    it is more common to generate urls using named routes versus explicitly supplying parameters as in the hash above
 
+  Hardcoded parmas
+    you can insert extra params to be passed on with the normal expected params
+    example: get 'products/special' => 'products#show', special: 'true'
+    However, the author dosn't think this is good practice
+    and suggests point to a diffrent action rather than inserting a clause
+    example: get 'products/special' => 'products#special'
+
+  Spotlight on the :id Field
+    :id segment keys arn't as magical as they look
+    you could change the rule so :id was :blah
+    and then in you controller do:
+      @product = Product.find(params[:blah])
+    :id is a convention for use when an action needs access to a database record
+
+  Optional Segment Keys
+    can define optional segment keys
+    match ':controller(/:action(/:id(.:format)))', via: :any
+    parentheses are used - similar to defingin optional groups in a reg ex
+
+  Redirect Routes
+    get "/foo", to: redirect('/bar')
+    or
+    get "/google", to: redirect('https://google.com/')
+
+  Segment Key Constraints
+   example:route all show requests to error action if id non-numerical. You’d do this by creating two routes, one that handled numerical ids, and a fall-through route that handled the rest:
+    get ':controller/show/:id' => :show, constraints: {:id => /\d+/}
+    get ':controller/show/:id' => :show_error
+
+  Named Routes
+    Creating a Named Route
+      routes.rb: get 'help' => 'help#index', as: 'help'
+      url generator: link_to "Help", help_path # will links to views/help/index.html.erb
+      url: /help
+      invokes index action of the help controller when clicked
+
+      !!!you can test named routes in the console directly using the app object
+        ex. app.client's_path #returns the end of the url not including the domai name in this case "/clients"
+        ex. app.client's_url # returns the full url including the domain name
+
+      name_path versus name_url
+        "you probably should always use the _url version when you use a named route as an argument to redirect_to in your controller code." --according to HTTP spec but in reality it dosn't effect much
+        "other than redirects, permalinks, and a handful of other edge cases, it’s the Rails way to use _path instead of _url"
+
+      What to Name Your Routes
+        Follow REST conventions
+        otherwise you'll need a top down approach
+        get "item/:id" => "items#show", as: "item"
+
+      Argument sugar
+        in the second argument in link_to you don't need to explicitly say item_path(id: item.id)
+        you can instead say item_path(item.id)
+        or you could just pass in the item object and tails will infer the id like item_path(item)
+        or for a nested route where item is nested inside of auction item_path(auction, item)
+        whats going on behind the scences?
+        rails is infering the ids of both objects cy calling the to_param on whatever objects are passed.
+
+      A little more sugar with your sugar
+        It is sometimes better practice to use a short description in place of an id number in the route
+        This is better sometimes because its is both more descriptive and it gives hackers and users less information about your database.
+        you can define to_param in your model
+        def to_param
+          description.parameterize
+        end
+        afterwards item_path(auction, item)
+        will produce the url
+        '/auction/3/item/cello-bow'
+
+  Scoping Routing Rules
+    this
+      get'auctions/new'=>'auctions#new' get'auctions/edit/:id'=>'auctions#edit' post'auctions/pause/:id'=>'auctions#pause'
+    becomes this
+      scope controller: :auctions do
+        get 'auctions/new' => :new
+        get 'auctions/edit/:id' => :edit post 'auctions/pause/:id' => :pause
+       end
+    and even
+      scope path: '/auctions',  controller: :auctions do
+        get 'new' => :new
+        get 'edit/:id' => :edit
+        post 'pause/:id' => :pause
+      end
+
+    Listing Routes
+      $ rake routes #lists all routes
+      $ rake routes CONTROLLER=products
+      would only lists the routes related to ProductsController.
+
+    conclusion
+      routes recognize incoming requests and map them to controller actions
+      recognizes URL parameter methods such as link_to so that html links can be generated
 

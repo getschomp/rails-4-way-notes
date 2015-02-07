@@ -1,0 +1,26 @@
+The Rails 4 Way - Notes
+
+2 - REST, Resources, and Rails
+
+  Before rest no one knew where to put stuff
+  REST - Representational State Transfer
+  REST allows us to name and organize resources and actions to match common actions of all database-backed applications
+
+    Rest in a Rather Small Nutshell
+      a serise of contraints imposed upon the interaction between system components.
+      "• Use of a client-server architecture
+      • Stateless communication
+      • Explicit signaling of response cacheability
+      • Use of HTTP request methods such as GET, POST, PUT and DELETE"
+      REST is designed to help you provide services using the native idioms and constructs of HTTP.
+
+    Resources and representations
+      a resource is conceptual mapping and is not in itself tied to a database model or controller
+      a description of the thing you are trying to get ahold of
+      The story of REST and Rails starts with CRUD...
+
+    Routing and CRUD
+      actions are mostly the same at there base create Read Update and delete no need to name them creativly each time with things like add_item or replace_email_address
+      You can create a route that maps to any action, whatever the action’s name. Choosing CRUD names is a matter of discipline. Except... when you use the REST facilities offered by Rails, it happens automatically.
+      Using REST gives you shortcuts to best practices
+
