@@ -2,26 +2,27 @@ The Rails 4 Way - Notes
 
 2 - REST, Resources, and Rails
 
-  Before rest no one knew where to put stuff
+  Before REST came I (and pretty much everyone else) never really knew where to put stuff. —Jonas Nicklas on the Ruby on Rails mailing list
+
   REST - Representational State Transfer
   REST allows us to name and organize resources and actions to match common actions of all database-backed applications
 
     Rest in a Rather Small Nutshell
-      a serise of contraints imposed upon the interaction between system components.
-      "• Use of a client-server architecture
-      • Stateless communication
-      • Explicit signaling of response cacheability
-      • Use of HTTP request methods such as GET, POST, PUT and DELETE"
+      a series of constraints imposed upon the interaction between system components.
+        "• Use of a client-server architecture
+        • Stateless communication
+        • Explicit signaling of response cacheability
+        • Use of HTTP request methods such as GET, POST, PUT and DELETE"
       REST is designed to help you provide services using the native idioms and constructs of HTTP.
 
     Resources and representations
       a resource is conceptual mapping and is not in itself tied to a database model or controller
-      a description of the thing you are trying to get ahold of
+      a description of the thing you are trying to get a hold of
       The story of REST and Rails starts with CRUD...
 
     Routing and CRUD
-      actions are mostly the same - Create Read Update and delete no need to name them creativly each time with things like add_item or replace_email_address
-      You can create a route that maps to any action, whatever the action’s name. Choosing CRUD names is a matter of discipline. Except... when you use the REST facilities offered by Rails, it happens automatically.
+      actions are mostly the same - Create Read Update and delete no need to name them creatively each time with things like add_item or replace_email_address
+      You can create a route that maps to any action, whatever the action's name. Choosing CRUD names is a matter of discipline. Except... when you use the REST facilities offered by Rails, it happens automatically.
       Using REST gives you shortcuts to best practices
 
       Rest Resources and CRUD
@@ -31,15 +32,15 @@ The Rails 4 Way - Notes
 
       From Named Routes to REST support
         we want the simplicity of calling auctions_path for both create and index,
-        but these would be pointing to the same url, so how do we differentiate them
+        but these would be pointing to the same url, so how do we differentiate them?
 
       Reenter the HTTP verb
-        a form submisson does goto the auctions_path but it
+        a form submission does goto the auctions_path but it
         attaches an HTTP POST verb
         if a request goes to the index page without going through a form it knows to attach a GET
-        Routes can have the same name but do diffrent things depending on their verb
-        this is how one resource call can get us 7 purmutations with 4 named routes.
-        we are able to almost double the number of purmutations created by the routes by attaching HTTP verbs
+        Routes can have the same name but do different things depending on their verb
+        this is how one resource call can get us 7 permutations with 4 named routes.
+        we are able to almost double the number of permutations created by the routes by attaching HTTP verbs
 
       The Standard RESTful Controller Actions
         when you call
@@ -48,10 +49,136 @@ The Rails 4 Way - Notes
         index, create, show, update, destroy, new, edit
         you need to know what contexts will throw an HTTP verb since you are using the same routes for both
         1. The default request method is GET.
-        2. In a form_tag or form_for call,the POST method will be used automatically.(Thats why my refresh button was attaching an unwanted post method)
+        2. In a form_tag or form_for call,the POST method will be used automatically.(Thats why my refresh button was attaching an unwanted post method and causing an unwanted flash message)
         3. Sometimes you might want to specify the method yourself along with a url(mostly with PATCH and DELETE operations)
         example
         ```link_to "Delete", auction_path(auction), method: :delete```
+        you don't normally need to specify PATCH because rails figures out which one you need if you pass an object to form helpers(the typical way you create a form)
+
+      PATCH vs. PUT
+        use PATCH when updating.
+        PUT would replace the entire resource, rails does this automagically in rails 4
+
+      Singular and Plural RESTful Routes
+        singular - show, new, edit and destroy
+        plural - everything else
+        singular resources require an argument
+
+      The Special Pairs: new/create and edit/update
+        new and edit relate to the action that displays the form
+        create and update relate to the action that processes the form input when the form is submitted
+
+      The PATCH and DELETE Cheat
+        patch and delete are actually POST requests with a
+        hidden field called _method set to either
+        "patch or "delete"
+
+      Limiting Routes Generated
+        use except or only to limit the routes generated
+        resources :clients, except: [:index]
+        resources clients, only: [:new, :create]
+
+  Singular Resource Routes
+    You can declare a resource instead of resources in routing
+    example:
+    resource :profile
+    you get all of the routes except index.
+
+  Nested Resources
+    resources :auctions do
+      resources :bids
+    end
+    gives:
+    /auctions/3/bids/5
+    The url is more informative
+    you can reference the id of what it is nested in in the action with params[:auction_id]
+    you can nest to any depth
+    pass both objects in an array on a link_to
+    example:
+    link_to "Delete this bid", [auction, bid], method: :delete
+
+    RESTful Controller Mappings
+      automatically mapped to controller actions
+
+    considerations
+      is nesting worth it?
+      in the example given bids and auctions,
+      you can still access the associated auction fairly easily through active record.
+      DHH justifies them by playing up the ease of enforcing permissions and context-based constraints
+      Mostly you only should be able to access the nested resource in the context of its parent
+      auction = Auction.find(params[:auction_id])
+      bid = auction.bids.find(params[:id]) # prevents auction/bid mismatch
+      "The auction is identified in the URL rather than having to clutter your new bid form data with hidden fields or resorting to non-RESTful practices."
+
+    Deep Nesting?
+      Many argue that it is not good practice to nest more than one deep
+      in a situation where the below code would work:
+      resources :auctions do
+        resources :bids do
+          resources :comments
+        end
+      end
+
+      it would be better to do:
+      resources :auctions do
+        resources :bids
+      end
+
+      Resources :bids do
+        resources :comments
+      end
+
+      resources :comments
+
+      rationale: urls are shorter and helper methods are easier to work with
+
+      this is controversial
+
+    Shallow Routes
+      a :shallow option helps to shorten URL's where possible.
+      example
+      resources :auctions, shallow: true do
+        resources :bids do
+          resources :comments
+        end
+      end
+      the resulting routes generated only include the nested part of the url when it is needed to determine what data to display
+
+    Routing Concerns
+      routing isn't always DRY
+      oftentimes there is repitition in the form of nested routes
+      for instance both auctions and bids might have comments associated with them
+      a routing method called concerns handles this in rails 4
+      to use concerns first define some concerns
+        concern :commentable do
+          resources :comments
+        end
+        concern :image_attachable do
+          resources :image_attachments, only: :index
+        end
+      then you can add the concerns to a route
+      resources :auctions,concerns:[:commentable,:image_attachable] do
+        resources :bids
+      end
+
+  RESTful Route Customizations
+    sometimes you will need custom actions and routes
+    for instance, what if there is more than one way to "show"
+    (perhaps the associated podcast versus the info about the podcast?)
+    you shouldn't use show for more than one view
+
+    Extra Member Routes
+
+
+
+
+
+
+
+
+
+
+
 
 
 
