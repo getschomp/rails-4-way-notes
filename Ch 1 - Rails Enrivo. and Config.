@@ -1,12 +1,12 @@
 The Rails 4 Way - Notes
 
-1 - Rails enviroment and configuration
+1 - Rails environment and configuration
 
   this chapter will cover:
     bundler
     boot.rb and application.rb(startup and request handeling)
-    the three enviroments that come standard(development, production, test)
-    creating your oen enviroment
+    the three environments that come standard(development, production, test)
+    creating your own environment
   thats it!
 
   Bundler
@@ -47,7 +47,7 @@ The Rails 4 Way - Notes
     changes to this file require a server restart to take effect
     by default the file has:
       require "rails/all"
-    but you can delete that if you only want to enable certain parts of the rails default configuations(railties), for example:
+    but you can delete that if you only want to enable certain parts of the rails default configurations(railties), for example:
       require "active_record/railtie"
 
   Time Zones(application.rb)
@@ -66,7 +66,7 @@ The Rails 4 Way - Notes
   Initializers(config/initializers)
 
     Backtrace Silencers (smaller error messages)
-      you can specifiy how far back you want the backtrace to go when an error message with a long backtrace is thrown
+      you can specify how far back you want the backtrace to go when an error message with a long backtrace is thrown
 
     Filter Parameter Logging (private parts of logs)
       you can keep certain parameters out of your logs so if hackers find your logs they can't abuse this information.
@@ -103,11 +103,11 @@ The Rails 4 Way - Notes
       you can make your app load files from directories other than the default
 
     Log-Level Override
-      configure how much information the log file will give you in the various enviroments
+      configure how much information the log file will give you in the various environments
       available log levels are: :debug, :info, :warn, :error, :fatal, and :unknown these also correspond with the numbers 0 to 5
 
     Schema Dumper
-       "revert to the older style of dumping the schema using SQL, if you’re doing things that are incompatible with the schema dumper code"
+       "revert to the older style of dumping the schema using SQL, if you're doing things that are incompatible with the schema dumper code"
 
     Console
      you can configure what methods are run in the console when you run rails c
@@ -134,7 +134,7 @@ The Rails 4 Way - Notes
       config.eager_load = false # boosts loading speed in dev
 
     Error Reports
-      config.consider_all_requests_local = true # gives developer freindly error messages in the browser even when on a remote machine
+      config.consider_all_requests_local = true # gives developer friendly error messages in the browser even when on a remote machine
 
     Caching
       caching = bad in development
@@ -145,12 +145,12 @@ The Rails 4 Way - Notes
     Raise Delivery Errors
       # Don't care if the mailer can't send.
       config.action_mailer.raise_delivery_errors = false
-      change that line if you are debugging or teting mailing in production
+      change that line if you are debugging or testing mailing in production
       you can see the delivery in the log
 
     Deprecation Notices
-      set how you recive depreciation notices
-      throught the rails logger
+      set how you receive depreciation notices
+      through the rails logger
 
     Pending Migrations Error Page
       gives you an error in the browser if you didn't migrate
@@ -165,10 +165,10 @@ The Rails 4 Way - Notes
       RAILS_ENV = test
       eager load false
       disable caching
-      the test enviroment sends emails to an array called ActionMailer::Base.deliveries
+      the test environment sends emails to an array called ActionMailer::Base.deliveries
       mostly you will never need to edit the test config
 
-  Custom Enviroments
+  Custom Environments
     might be configured for a QA deployment to diagnose production problems
 
   Production Mode
@@ -177,7 +177,7 @@ The Rails 4 Way - Notes
       faster because it does reload everything at ever request
       #File:config/environments/production.rb
       cache = true
-      eager_load = true #proformance boost in production
+      eager_load = true #performance boost in production
       compress assets
 
     Assets
@@ -186,10 +186,10 @@ The Rails 4 Way - Notes
 
   Configuring a Database
     don't store database.yml on github
-    or use an enviroment variable like DATABASE_URL
+    or use an environment variable like DATABASE_URL
 
   Configuring Application Secrets
-    use an enviroment variable like ENV['SECRET_KEY_BASE']
+    use an environment variable like ENV['SECRET_KEY_BASE']
 
   Logging
     a message to the log using the logger
@@ -201,8 +201,8 @@ The Rails 4 Way - Notes
       to do that run:
       tail -f log/development.log
       most useful log outputs :
-      the hash of parmeters associated with the request
-      controllers and actions invoced as well as SQL statements
+      the hash of parameters associated with the request
+      controllers and actions invoked as well as SQL statements
       how fast the processes completed
 
     Tagged Logging
@@ -211,7 +211,7 @@ The Rails 4 Way - Notes
       the log might then say [some_subdomain] Started GET "/articles" for 127.0.0.1 at 2013-02-01 11:49:09 -0500
 
     Log File Analysis
-      proformance
+      performance
         not always that accurate but still pretty useful for comparison sake
       SQL queries
         is active record doing what i want?

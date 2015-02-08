@@ -146,7 +146,7 @@ The Rails 4 Way - Notes
 
     Routing Concerns
       routing isn't always DRY
-      oftentimes there is repitition in the form of nested routes
+      oftentimes there is repetition in the form of nested routes
       for instance both auctions and bids might have comments associated with them
       a routing method called concerns handles this in rails 4
       to use concerns first define some concerns
@@ -164,10 +164,201 @@ The Rails 4 Way - Notes
   RESTful Route Customizations
     sometimes you will need custom actions and routes
     for instance, what if there is more than one way to "show"
-    (perhaps the associated podcast versus the info about the podcast?)
     you shouldn't use show for more than one view
 
     Extra Member Routes
+      Example: retract an auction, similar to destroy but with minor changes.
+      we want the url:
+        /auctions/3/bids/5/retract
+      and the helper:
+        retract_auction_bid_url
+      in config/routes.rb:
+        resources: auctions do
+          resources :bids do
+            member do
+              get :retract
+            end
+          end
+        end
+      now you can add a link in the view using:
+      link_to "Retract", retract_bid_path(auction, bid)
+      this should link to the form since it passes a GET method
+      to trigger the retract action use the post method version of the link that we have to add to the routes.rb
+      resources :auctions do
+        resources :bids do
+          member do
+            get :retract
+            post :retract
+          end
+        end
+      end
+      this can be shortened with :match or :on see the chapter
+    Extra Collection Routes
+      resources :auctions do
+        match :terminate, via: [:get, :post], on: :collection
+      end
+      allows you to do something to the entire collection
+      for instance terminate all the auctions
+
+    Custom Action Names
+      You can rename the urls for the auto generated paths
+      for instance you could rename all of the new links to the spanish word for new 'nuevo'
+      resources :projects, path_names: { new: 'nuevo', edit: 'cambiar' }
+
+    Mapping to a Different Controller
+      you can use a controller by a different name!!
+      example:
+      resources :photos, controller: "images"
+
+    Routes for New Resources
+      resources :reports do
+        new do
+          post :preview
+        end
+      end
+
+    Considerations for Extra Routes
+      Adding extra actions corrupts the elegance of your overall RESTful application design, because it leads you away from finding all of the resources lurking in your domain.
+
+      Rather than tacking a retract action onto the BidsController,introduce a retraction resource, associated with bids, and write a RetractionController to handle it.
+
+    Controller-Only Resources
+      Resources don't necessarily mean models
+      Resources don't necessarily map directly to a controllers
+      might have occasion to create a set of resource routes, and a matching controller, that don’t correspond to any model in your application at all.
+      for instance a landing page might have a route and controller but not a model
+      create might be used to create a user session rather than something that exists within the database
+
+  Different Representations of Resources
+
+  REST based systems exchange representations of resources rather than the resources themselves
+  Representations  with a verb are used for the basis of updating a record
+
+    The respond_to Method
+      you can render the data associated with a resource in html, xml or json format using respond_to
+      example:
+
+      def index
+        @auctions = Auction.all
+        respond-to do |format|
+          format.html
+          format.xml { render xml: @auctions }
+        end
+      end
+
+      you can DRY it up like this:
+
+      class AuctionsController< ApplicationController
+        respond_to :html, :xml, :json
+        def index
+          @auctions = Auction.all
+          respond_with(@auctions)
+        end
+      end
+
+      you can now access
+      /actions.html
+      /auctions.xml
+      and
+      .auctions.json
+
+      you can now link via
+      link_to "XML version of this auction", auction_path(@auction, :xml)
+
+  The RESTful Rails Action Set
+
+    This section looks at the 7 RESTful actions
+    including issues and choices associated with them
+
+    Index
+      Represents plural collections
+      most basic
+      def index
+        @auctions = Auction.all
+      end
+      You will want to restrict what certain people can see in certain situations
+      test for logged in user and decide what to show
+      example: user might want to only see there bids on a page
+      but can also see the public view
+      you might want to define a separate collection resource that similar to index
+
+      In routes.rb:
+
+      resources :auctions do
+        resources :bids do
+          get :manage, on: :collection
+        end
+      end
+      resources:bids
+
+      In the bid controller:
+
+      before_action :check_authorization, only: :manage
+
+      def index
+        @bids = Bid.all
+      end
+
+      def manage
+        @bids = auction.bids
+      end
+
+    Show
+      show is triggered by a GET request
+      classic example:
+
+      def show
+        @auction = Auction.find(params[:id])
+      end
+
+      might include differentiation between showing a users public profile versus private
+
+      !!! make show actions public
+      have a different action for private profiles
+
+    Destroy
+      protect the destroy action
+      admin safe guarding in many cases
+
+      classProductsController<ApplicationController
+        before_action :admin_required, only: :destroy
+
+      def destroy
+        product.destroy
+        redirect_to products_url, notice: "Product deleted!"
+      end
+
+      Rails has some build in safe guards to keep bots from destroying your resources
+      only a human clicking the link should be able to deliver a destroy message
+      because the delete link is bound with a rel="nofollow" attribute
+
+    new and create
+      new just renders the form and can be left out and rails will find the right view
+      create actually makes the database entry from the form
+      you must have a strong param declared for that resource
+      then you can do
+
+      def create
+        if auction.save
+          redirect_to auction_url(auction), notice: "Auction created!"
+        else
+          render :nes
+        end
+      end
+
+      Edit and Update
+        this is similar to new and create
+        you can use a partial with the same form in new if you want since the forms are similar
+        the form_for checks if the object you pass to it has been persisted
+        if it has been persisted it will use PATCH
+
+      Conclusion
+        A discussion of routes and REST led to a discussion of controller actions
+        the next chapter covers controller concepts in more depth
+        Action Controller API will be covered
+
+
+
 
 
 
