@@ -342,7 +342,7 @@ The Rails 4 Way - Notes
         if auction.save
           redirect_to auction_url(auction), notice: "Auction created!"
         else
-          render :nes
+          render :new
         end
       end
 

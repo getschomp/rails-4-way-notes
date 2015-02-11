@@ -1,0 +1,6 @@
+The Rails 4 Way - Notes
+
+5 - Working with ActiveRecord
+
+an object encapsulates a database row
+represents models and there relationships

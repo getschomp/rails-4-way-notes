@@ -1,0 +1,24 @@
+The Rails 4 Way - Notes
+
+4 - Working with Controllers
+
+  Controllers are the heart, the first dispatch
+  They are in charge of flow
+  they gather info and make it avalible to the view
+  keep buisness logic out of the controller and in the models
+  What happens on the way to a controller action being executed and what happends as a result.
+
+  Rack
+    An modular interface for handeling web requests written in Ruby
+    It abstracts ways of handeling HTTP requests
+    responds with a call method
+    used in sinatra and other ruby frameworks
+    Rack does not really play a part in day-to-day development of applications.
+    Much of the action controller is implemented as rack middleware modules
+    at cli
+    $ rake middleware
+    will return a list of rack filers enabled for your application
+
+    Configuring Your Middleware Stack
+
+
