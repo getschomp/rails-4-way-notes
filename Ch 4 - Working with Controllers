@@ -15,10 +15,29 @@ The Rails 4 Way - Notes
     used in sinatra and other ruby frameworks
     Rack does not really play a part in day-to-day development of applications.
     Much of the action controller is implemented as rack middleware modules
-    at cli
+    at cli:
     $ rake middleware
     will return a list of rack filers enabled for your application
 
     Configuring Your Middleware Stack
+
+    int the config/application.rb file
+    config.middleware allows you to minipulate the middleware stack
+    you can control the order in which your middleware stack is configured
+
+  4.2 Action Dispatch:Where it All Begins
+    Action Dispatch - contains classes that interface the rest of the controller system to Rack.
+
+    Request Handling
+
+    When in doubt Render
+    every controller action has an implicit render a
+
+    Explicit Rendering
+    You can change the default rendered view of an action
+
+    Rendering another actions template
+    sometimes you might explicitly render a view to go back to the same view after an improperly submitted form
+
 
 
