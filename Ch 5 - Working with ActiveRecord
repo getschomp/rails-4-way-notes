@@ -14,3 +14,5 @@ stray from the "golden path" and you will get stuck in the mud
 conventions like naming and how foreign keys are handled are set by default but can be changed
 
 !!! the server will autorelod database schema changes but in the console you must type the command: reload!
+
+Macro-Style Methods

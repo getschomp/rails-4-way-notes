@@ -30,14 +30,83 @@ The Rails 4 Way - Notes
 
     Request Handling
 
-    When in doubt Render
-    every controller action has an implicit render a
+    every controller action has an implicit render
+    a controller will act like it has an index method even with on omited
 
     Explicit Rendering
     You can change the default rendered view of an action
 
     Rendering another actions template
-    sometimes you might explicitly render a view to go back to the same view after an improperly submitted form
+    sometimes you might sprcify an explicitl rendering of a view to go back to the same view after an improperly submitted form
+    example:
+    def create
+      @event = Event.new(params[:event])
+      if @event.save
+        redirect_to dashboard_path, notice: "Event Created!"
+      else
+        render action: 'new'
+      end
+    end
+
+    Rendering a diffrent template all together
+    render template: '/products/index.html.haml'
+
+    Rendering a Partial Template
+    allows you to organize your template code into small files
+    avoids cluter and helps break up code
+    Name the partial with an underscore but don't refer to if with one
+    render partial: 'product' #renders app/views/products/_product.html.haml
+    if you pass render partial an object it will use its class name to find a partial to render
+    for instance,
+    render partial: @product
+    will render the same partial as
+    render partial: 'product'
+
+    Rendering Inline Template Code
+    violation of MVC seperation of concerns
+
+    REndering Text
+    send plain text back to the browser when responding to ajax
+    render text: 'Submission accepted'
+
+    Rendering other types of structured data
+
+      JSON
+      used as a way of sending data down to javascript code running in rich web application via Ajax calls
+
+      render json: @record
+
+      XML
+      conversiton of an object to xml
+      render xml: @record
+
+    Rendering Nothing
+    head :unauthorized
+    head sends a respose with no content
+    or
+    render nothing:true, status: 401
+
+    Rendering options
+    :content_type
+    specifies what fromat you are sending to client
+    :layout
+    allow tou to specify name of layout template
+    :status
+    attach a status code
+    200 OK
+    201 Created
+    207 Temp Redirect
+    401 unauthorized
+    403 forbidden
+
+
+
+
+
+
+
+
+
 
 
 
