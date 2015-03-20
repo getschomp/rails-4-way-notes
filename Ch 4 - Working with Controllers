@@ -6,7 +6,9 @@ The Rails 4 Way - Notes
   They are in charge of flow
   they gather info and make it avalible to the view
   keep buisness logic out of the controller and in the models
-  What happens on the way to a controller action being executed and what happends as a result.
+  This chapter examines:
+  1. What happens on the way to a controller action being executed
+  2. what happens as a result.
 
   Rack
     An modular interface for handeling web requests written in Ruby
@@ -36,8 +38,8 @@ The Rails 4 Way - Notes
     Explicit Rendering
     You can change the default rendered view of an action
 
-    Rendering another actions template
-    sometimes you might sprcify an explicitl rendering of a view to go back to the same view after an improperly submitted form
+    Rendering Another Actions template
+    sometimes you might specify an explicit rendering of a view to go back to the same view after an improperly submitted form
     example:
     def create
       @event = Event.new(params[:event])
@@ -54,7 +56,7 @@ The Rails 4 Way - Notes
     Rendering a Partial Template
     allows you to organize your template code into small files
     avoids cluter and helps break up code
-    Name the partial with an underscore but don't refer to if with one
+    Name the partial with an underscore but don't refer to it with one
     render partial: 'product' #renders app/views/products/_product.html.haml
     if you pass render partial an object it will use its class name to find a partial to render
     for instance,
@@ -62,17 +64,20 @@ The Rails 4 Way - Notes
     will render the same partial as
     render partial: 'product'
 
+    Partial rendering from a controller is mostly used in conjuncation with Ajax that needs to dynammically update segments of an already displayed page.
+    This will be covered in chapter 10 on action view
+
     Rendering Inline Template Code
     violation of MVC seperation of concerns
 
-    REndering Text
+    Rendering Text
     send plain text back to the browser when responding to ajax
     render text: 'Submission accepted'
 
     Rendering other types of structured data
 
       JSON
-      used as a way of sending data down to javascript code running in rich web application via Ajax calls
+      used as a way of sending data down to javascript code running in a rich web application via Ajax calls
 
       render json: @record
 
