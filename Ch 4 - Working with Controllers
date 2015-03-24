@@ -35,6 +35,7 @@ The Rails 4 Way - Notes
     every controller action has an implicit render
     a controller will act like it has an index method even with on omited
 
+  4.3 Rendering
     Explicit Rendering
     You can change the default rendered view of an action
 
@@ -70,9 +71,10 @@ The Rails 4 Way - Notes
     Rendering Inline Template Code
     violation of MVC seperation of concerns
 
+
     Rendering Text
-    send plain text back to the browser when responding to ajax
-    render text: 'Submission accepted'
+      send plain text back to the browser when responding to ajax
+      render text: 'Submission accepted'
 
     Rendering other types of structured data
 
@@ -86,29 +88,51 @@ The Rails 4 Way - Notes
       render xml: @record
 
     Rendering Nothing
-    head :unauthorized
-    head sends a respose with no content
-    or
-    render nothing:true, status: 401
+      head :unauthorized
+      head sends a respose with no content
+      or
+      render nothing:true, status: 401
 
     Rendering options
-    :content_type
-    specifies what fromat you are sending to client
-    :layout
-    allow tou to specify name of layout template
-    :status
-    attach a status code
-    200 OK
-    201 Created
-    207 Temp Redirect
-    401 unauthorized
-    403 forbidden
+      :content_type
+      specifies what fromat you are sending to client
+      :layout
+      allow tou to specify name of layout template
+      :status
+      attach a status code
+      200 OK
+      201 Created
+      207 Temp Redirect
+      401 unauthorized
+      403 forbidden - the server understood but refuses ususally because a bot is trying to trick the server
+      you can tell rails to render this if the user isn't logged in, for example if the google bot
+      404 - not found - the resurece may have been moved or deleted
+      410 - Gone
+      500 - Internal Server Error - often times a coding error
+      503 - Service unavalible - site is down for maintaince
 
+  4.4 Additional Layout Options
+    you can specify a layout at the controller level if you want to reuse layouts for multiple applications
 
+  4.5 Redirecting
+    Redering is the final step in a rquest
+    redirecting terminates a request and initiates a new one
+    example:
+    def create
+        if @event.save
+          flash[:notice] = "Event Created!"
+          redirect_to index
+        else
+          render :new
+        end
+      end
 
-
-
-
+    The redirect_to method
+    redirect_to(url, staus)
+    url can be expressed as a string object or action
+    :back - redirects back to the page that issued the request
+    assign a flash message as part of the redirect
+    new to rails 4 you can add flash types
 
 
 
