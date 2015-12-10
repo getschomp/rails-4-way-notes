@@ -1,18 +1,18 @@
-The Rails 4 Way - Notes
+ tThe Rails 4 Way - Notes
 
 5 - Working with ActiveRecord
 
 an object encapsulates a database row
-represents models and there relationships
+represents models and their relationships
 
 The basics
-When you create a new model class as a subclass of ActiveRecord Base Tails will understand convensions like:
-  -expect an id cloumn to be used as a primary key
-  -expect pluralization conventions
+When you create a new model class as a subclass of ActiveRecord Base Rails will implictly excpet:
+  - an id column to be used as a primary key
+  - pluralization conventions
 
-stray from the "golden path" and you will get stuck in the mud
 conventions like naming and how foreign keys are handled are set by default but can be changed
+however, it is better not to change them
 
-!!! the server will autorelod database schema changes but in the console you must type the command: reload!
+!!! the server will autoreload database schema changes but in the console you must type the command: reload!
 
 Macro-Style Methods
